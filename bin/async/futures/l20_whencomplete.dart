@@ -1,15 +1,19 @@
-/*
-Async try-catch-finally using whenComplete()
-If then().catchError() mirrors a try-catch, whenComplete() is the equivalent of 
-‘finally’. The callback registered within whenComplete() is called when 
-whenComplete()’s receiver completes, whether it does so with a value or with an 
-error
-*/
+// https://dart.dev/guides/libraries/futures-error-handling#async-try-catch-finally-using-whencomplete
+// Async try-catch-finally using whenComplete()
+// If then().catchError() mirrors a try-catch, whenComplete() is the equivalent
+// of ‘finally’. The callback registered within whenComplete() is called when
+// whenComplete()’s receiver completes, whether it does so with a value or with
+// an error
+
+// We want to call server.close regardless of whether server.post() produces a
+// valid response, or an error. We ensure this happens by placing it inside
+// whenComplete().
+
 void main() {
   final server = Server({'url': 'https://serverurl'});
-  server
-      .post('https://serverurl/post/user',
-          fields: const {'name': 'Dash1', 'profession': 'mascot'})
+
+  Future.value(server.post('https://serverurl/post/user',
+          fields: const {'name': 'Dash1', 'profession': 'mascot'}))
       .catchError(handlePostError)
       .then(handleResponse, onError: handleThenError)
       .whenComplete(server.close);
@@ -55,11 +59,11 @@ class Server {
     print('Connected with Server');
   }
 
-  Future<Response> post(String url, {required Map fields}) {
+  Response post(String url, {required Map fields}) {
     if (fields['name'] != 'Dash') {
       throw Exception('Bad input data');
     }
-    return Future.value(Response('OK', ''));
+    return Response('OK', '');
   }
 
   close() {
@@ -67,8 +71,3 @@ class Server {
     print('Connection with Server terminated');
   }
 }
-
-// We want to call server.close regardless of whether server.post() produces a 
-// valid response, or an error. We ensure this happens by placing it inside 
-// whenComplete().
-

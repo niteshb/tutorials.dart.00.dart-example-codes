@@ -1,13 +1,9 @@
 void main() {
   Future(funcThatThrows)
       // Future completes with an error:
-      .then((_) => print("Won't reach here"))
-      // Future completes with the same error:
-      .whenComplete(whenComplete)
-      // Future completes with the same error:
-      .then((_) => print("Won't reach here"))
-      // Error is handled here:
-      .catchError(handleError);
+      .then((int _) => print(''))
+      .catchError(handleError)
+      .whenComplete(whenComplete); // Future completes with someObject
 }
 
 int funcThatThrows() {
@@ -16,9 +12,8 @@ int funcThatThrows() {
   //return 5;
 }
 
-double whenComplete() {
+void whenComplete() {
   print('funcWhenComplete:: Reaches here');
-  return 20.22;
 }
 
 handleError(_) {
