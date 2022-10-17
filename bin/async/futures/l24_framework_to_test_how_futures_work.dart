@@ -5,15 +5,23 @@ class VyException implements Exception {
   final dynamic data;
   VyException(this.data);
   @override
-  String toString() => 'Exception: $data';
+  String toString() => 'VyException: $data';
 }
 
 void main() async {
-  List<Function> l = [f1_Vf, f1_Vt, f1_E__tc, f1_E__toc];
-  for (int i = 0; i < l.length; i++) {
+  List<Function> testFunctionList = [
+    f1_Vf,
+    f1_Vt,
+    f1_E__tc,
+    f1_E__toc,
+    f1_E_toc__f2_tc___tt,
+    f1_E_toc__f2_toc___tt,
+    f1_E_toc__f2_toc___ttt
+  ];
+  for (int i = 0; i < testFunctionList.length; i++) {
     pprint();
     stars();
-    await l[i]();
+    await testFunctionList[i]();
   }
   stars();
 }
@@ -26,8 +34,8 @@ void f1_Vf() {
   print('* f1_Vf');
   stars();
   Future<Map> f1 = Future.value(f1v);
-  Future<Map> f2 = f1.then(f1Then);
-  f2.then(f2Then).catchError(f2CatchError);
+  Future<Map> f2 = f1.then(ff1.Then);
+  f2.then(ff2.Then).catchError(ff2.CatchError);
 }
 
 void f1_Vt() {
@@ -38,8 +46,8 @@ void f1_Vt() {
   print('* f1_Vt');
   stars();
   Future<Map> f1 = Future.value(f1v);
-  Future<Map> f2 = f1.then(f1Then);
-  f2.then(f2Then).catchError(f2CatchError);
+  Future<Map> f2 = f1.then(ff1.Then);
+  f2.then(ff2.Then).catchError(ff2.CatchError);
 }
 
 void f1_E__tc() {
@@ -50,10 +58,8 @@ void f1_E__tc() {
   print('* f1_E__tc');
   stars();
   Future<Map> f1 = Future.error(f1e);
-  Future<Map> f2 = f1 //
-      .then(f1Then) //
-      .catchError(f1CatchError);
-  f2.then(f2Then).catchError(f2CatchError);
+  Future<Map> f2 = f1.then(ff1.Then).catchError(ff1.CatchError);
+  f2.then(ff2.Then).catchError(ff2.CatchError);
 }
 
 void f1_E__toc() {
@@ -65,34 +71,78 @@ void f1_E__toc() {
   stars();
   Future<Map> f1 = Future.error(f1e);
   Future<Map> f2 = f1 //
-      .then(f1Then, onError: ff1['onError'])
-      .catchError(f1CatchError);
-  f2.then(f2Then).catchError(f2CatchError);
+      .then(ff1.Then, onError: ff1.OnError)
+      .catchError(ff1.CatchError);
+  f2.then(ff2.Then).catchError(ff2.CatchError);
 }
 
-// Here are the functions
-final ff1 = setGenerator<double>('f1', 12.3, 45.6, 78.9);
-final ff2 = setGenerator<String>('f2', 'f2.then() returns',
-    'f2.onError() returns', 'f2.catchError() returns');
-
-Map<String, Function> setGenerator<T>(
-    String funcId, dynamic thenRet, dynamic onErrorRet, dynamic catchErrorRet) {
-  return {
-    'then': funcThenFactory<T>('$funcId.then', 12.3),
-    'onError': funcErrorHandlerFactory<T>('$funcId.onError', 45.6),
-    'catchError': funcErrorHandlerFactory<T>('$funcId.catchError', 78.9),
+void f1_E_toc__f2_tc___tt() {
+  Map f1e = {
+    'data': 6,
+    'throw': [true, true]
   };
+  print('* f1_E_toc__f2_tc___tt');
+  stars();
+  Future<Map> f1 = Future.error(f1e);
+  Future<Map> f2 = f1 //
+      .then(ff1.Then, onError: ff1.OnError)
+      .catchError(ff1.CatchError);
+  f2.then(ff2.Then).catchError(ff2.CatchError);
 }
 
-final f1Then = funcThenFactory<double>('f1Then', 12.3);
-final f1OnError = funcErrorHandlerFactory<double>('f1OnError', 45.6);
-final f1CatchError = funcErrorHandlerFactory<double>('f1CatchError', 78.9);
+void f1_E_toc__f2_toc___tt() {
+  Map f1e = {
+    'data': 6,
+    'throw': [true, true]
+  };
+  print('* f1_E_toc__f2_toc___tt');
+  stars();
+  Future<Map> f1 = Future.error(f1e);
+  Future<Map> f2 = f1 //
+      .then(ff1.Then, onError: ff1.OnError)
+      .catchError(ff1.CatchError);
+  f2.then(ff2.Then, onError: ff2.OnError).catchError(ff2.CatchError);
+}
 
-final f2Then = funcThenFactory<String>('f2Then', 'from f2Then');
-final f2OnError =
-    funcErrorHandlerFactory<String>('f2OnError', 'from f2OnError');
-final f2CatchError =
-    funcErrorHandlerFactory<String>('f2CatchError', 'from f2CatchError');
+void f1_E_toc__f2_toc___ttt() {
+  Map f1e = {
+    'data': 6,
+    'throw': [true, true, true]
+  };
+  print('* f1_E_toc__f2_toc___ttt');
+  stars();
+  Future<Map> f1 = Future.error(f1e);
+  Future<Map> f2 = f1 //
+      .then(ff1.Then, onError: ff1.OnError)
+      .catchError(ff1.CatchError);
+  f2.then(ff2.Then, onError: ff2.OnError).catchError(ff2.CatchError);
+}
+
+// Here are the then, onError & catchError callback functions encapsulated
+// in objects of FuncSet Class
+final ff1 = FuncSet<double>('f1', 12.3, 45.6, 78.9);
+final ff2 = FuncSet<String>('f2', 'f2.then() returns', 'f2.onError() returns',
+    'f2.catchError() returns');
+
+// This class encapsulates then, onError & catchError callback functions for a
+// particular future.
+// The functions are created according to a pattern so that they print
+// information about them pretty verbosily
+// Data can be passed around to make then throw Exceptions
+class FuncSet<T> {
+  String funcId;
+  T thenRet, onErrorRet, catchErrorRet;
+  late final Map Function(Map) Then;
+  late final Map Function(Object) OnError;
+  late final Map Function(Object) CatchError;
+
+  FuncSet(this.funcId, this.thenRet, this.onErrorRet, this.catchErrorRet) {
+    Then = funcThenFactory<T>('$funcId.then', thenRet);
+    OnError = funcErrorHandlerFactory<T>('$funcId.onError', onErrorRet);
+    CatchError =
+        funcErrorHandlerFactory<T>('$funcId.catchError', catchErrorRet);
+  }
+}
 
 // Parse List<bool>.toString() to List<bool>
 List<bool> ParseListBool(String str) {
@@ -110,8 +160,7 @@ List<bool> ParseListBool(String str) {
 }
 
 // Function Generators
-Map Function(Object err) funcErrorHandlerFactory<T>(
-    String funcName, dynamic retval) {
+Map Function(Object err) funcErrorHandlerFactory<T>(String funcName, T retval) {
   Map funcErrorHandler(Object err) {
     // {data: 5, throw: [true, false, true]}
     List<bool> iThrows;
@@ -130,13 +179,13 @@ Map Function(Object err) funcErrorHandlerFactory<T>(
       print('$funcName:: I have been commanded to throw an error');
       throw VyException({'source': funcName, 'throw': iThrows.sublist(1)});
     }
-    return {'data': retval as T, 'throw': iThrows.sublist(1)};
+    return {'data': retval, 'throw': iThrows.sublist(1)};
   }
 
   return funcErrorHandler;
 }
 
-Map Function(Map) funcThenFactory<T>(String funcName, dynamic retval) {
+Map Function(Map) funcThenFactory<T>(String funcName, T retval) {
   Map funcThen(Map map) {
     print('$funcName:: $map');
     List<bool> iThrows = map['throw'];
@@ -146,7 +195,7 @@ Map Function(Map) funcThenFactory<T>(String funcName, dynamic retval) {
       print('$funcName: I have been commanded to throw an error');
       throw VyException({'source': funcName, 'throw': iThrows.sublist(1)});
     }
-    return {'data': retval as T, 'throw': iThrows.sublist(1)};
+    return {'data': retval, 'throw': iThrows.sublist(1)};
   }
 
   return funcThen;
