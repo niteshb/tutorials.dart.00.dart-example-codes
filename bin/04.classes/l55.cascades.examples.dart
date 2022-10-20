@@ -1,0 +1,1 @@
+// https://news.dartlang.org/2012/02/method-cascades-in-dart-posted-by-gilad.html

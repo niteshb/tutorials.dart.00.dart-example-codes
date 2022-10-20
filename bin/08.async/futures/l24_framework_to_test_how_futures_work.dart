@@ -1,4 +1,4 @@
-// ignore_for_file: non_constant_identifier_names, file_names
+// ignore_for_file: non_constant_identifier_names
 import 'package:dart_examples_classified/vayavya/console/embellish.dart';
 
 class VyException implements Exception {
